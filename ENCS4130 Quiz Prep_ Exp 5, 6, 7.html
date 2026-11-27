@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ENCS4130 Quiz Prep: BGP, Servers, VLANs</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--ink:#14213d;--mut:#5b6678;--line:#d9dee7;--c5:#1d5fd1;--c6:#16885a;--c7:#c46a00;--ok:#16885a;--bad:#c62f3d;--soft:#eef2f8;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1520;--card:#18202f;--ink:#e8edf6;--mut:#9aa7bb;--line:#2b3649;--c5:#6aa2ff;--c6:#47c88f;--c7:#ffa63d;--ok:#47c88f;--bad:#ff6b78;--soft:#1f2940;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1520;--card:#18202f;--ink:#e8edf6;--mut:#9aa7bb;--line:#2b3649;--c5:#6aa2ff;--c6:#47c88f;--c7:#ffa63d;--ok:#47c88f;--bad:#ff6b78;--soft:#1f2940;color-scheme:dark}
+html{scroll-padding-top:70px}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Georgia,"Times New Roman",serif}
+h1,h2,h3,nav,button,th,.tag{font-family:"Segoe UI",Helvetica,Arial,sans-serif}
+header{padding:28px 18px 8px;max-width:900px;margin:auto}
+h1{font-size:1.7rem;margin:0 0 4px}
+header p{margin:0;color:var(--mut)}
+nav{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);display:flex;gap:6px;padding:8px 14px;overflow-x:auto;max-width:100%}
+nav button{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:7px 14px;border-radius:20px;cursor:pointer;font-size:.9rem;white-space:nowrap}
+nav button[aria-selected="true"]{background:var(--ink);color:var(--bg)}
+nav button:focus-visible,summary:focus-visible,.opt:focus-visible{outline:3px solid var(--c5);outline-offset:2px}
+main{max-width:900px;margin:auto;padding:14px 16px 60px}
+section{display:none}section.on{display:block}
+h2{font-size:1.35rem;margin:22px 0 8px;padding-left:10px;border-left:6px solid var(--a,var(--c5))}
+h3{font-size:1.02rem;margin:18px 0 6px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:10px 0}
+.fig{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px;margin:10px 0}
+.fig svg{min-width:560px;width:100%;height:auto;display:block}
+svg text{fill:var(--ink);font:13px "Segoe UI",Arial,sans-serif}
+svg .b{fill:var(--soft);stroke:var(--ink);stroke-width:1.2}
+svg .h{fill:var(--a,var(--c5));stroke:none}svg .h+text,svg text.w{fill:#fff}
+svg line,svg path.l{stroke:var(--ink);stroke-width:1.6;fill:none}
+svg .m{fill:var(--mut);font-size:11px}
+table{border-collapse:collapse;width:100%;font-size:.93rem;font-family:"Segoe UI",Arial,sans-serif}
+th,td{border:1px solid var(--line);padding:6px 9px;text-align:left;vertical-align:top}
+th{background:var(--soft)}
+.tbl{overflow-x:auto}
+code,pre{font-family:Consolas,Menlo,monospace;font-size:.86rem}
+pre{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:10px 12px;overflow-x:auto;margin:8px 0;line-height:1.45}
+code{background:var(--soft);padding:1px 5px;border-radius:4px}
+.trap{border-left:5px solid var(--bad);background:var(--card);padding:10px 14px;border-radius:0 10px 10px 0;margin:10px 0;border-top:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.trap b:first-child{color:var(--bad);font-family:"Segoe UI",Arial,sans-serif}
+.tip{border-left:5px solid var(--ok)}
+ul{padding-left:20px;margin:6px 0}li{margin:3px 0}
+details{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 12px;margin:8px 0}
+summary{cursor:pointer;font-family:"Segoe UI",Arial,sans-serif;font-weight:600}
+.q{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:12px 0}
+.q p{margin:0 0 8px;font-weight:600}
+.opt{display:block;width:100%;text-align:left;margin:5px 0;padding:8px 11px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;cursor:pointer;font:inherit;font-size:.95rem}
+.opt.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 18%,var(--card))}
+.opt.no{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 18%,var(--card))}
+.ex{margin-top:6px;color:var(--mut);font-size:.92rem;display:none}
+.score{position:sticky;top:52px;background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:8px;font-family:"Segoe UI",Arial,sans-serif;display:flex;justify-content:space-between;align-items:center;z-index:4}
+.score button{background:var(--bg);color:var(--ink);border:0;border-radius:6px;padding:4px 10px;cursor:pointer}
+</style></head><body>
+<header><h1>Quiz prep: Experiments 5, 6 and 7</h1><p>BGP, DHCP/DNS/Web/Email, VLANs. Built from your lab manuals and the Quiz 2 and Quiz 3 samples.</p></header>
+<nav role="tablist" aria-label="Sections">
+<button role="tab" data-t="t5" aria-selected="true">Exp 5 BGP</button>
+<button role="tab" data-t="t6" aria-selected="false">Exp 6 Servers</button>
+<button role="tab" data-t="t7" aria-selected="false">Exp 7 VLANs + ACL</button>
+<button role="tab" data-t="tc" aria-selected="false">Commands drill</button>
+<button role="tab" data-t="tq" aria-selected="false">Practice quiz</button>
+</nav>
+<main>
+
+<section id="t5" class="on" style="--a:var(--c5)">
+<h2>BGP basics</h2>
+<div class="card"><ul>
+<li><b>IGP</b> (RIP, OSPF, EIGRP) routes inside one AS. <b>BGP</b> is the EGP between ASes. It is a <b>path vector</b> protocol: the <b>AS Path</b> is the key attribute, and a router that sees its own AS in the path drops the route (loop prevention).</li>
+<li>AS numbers: public 1 to 64,511, private 64,512 to 65,535. One BGP process per Cisco router.</li>
+<li>BGP is worth it with multiple external links or inbound policy control. Full table once, then incremental updates only.</li></ul></div>
+<div class="tbl"><table><tr><th>Source</th><th>Admin distance</th><th>Route code</th></tr>
+<tr><td>eBGP (different AS)</td><td><b>20</b></td><td>B</td></tr>
+<tr><td>EIGRP internal</td><td>90</td><td>D</td></tr>
+<tr><td>OSPF</td><td>110</td><td>O, O IA, O E2 (external from ASBR)</td></tr>
+<tr><td>EIGRP external</td><td>170</td><td>D EX</td></tr>
+<tr><td>iBGP (same AS)</td><td><b>200</b></td><td>B</td></tr></table></div>
+
+<h2>Session states (memorize the order)</h2>
+<div class="fig"><svg viewBox="0 0 700 120" role="img" aria-label="BGP finite state machine">
+<defs><marker id="ar" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" fill="currentColor" style="color:var(--ink)"/></marker></defs>
+<rect class="b" x="4" y="30" width="86" height="34" rx="6"/><text x="47" y="52" text-anchor="middle">Idle</text>
+<rect class="b" x="124" y="30" width="86" height="34" rx="6"/><text x="167" y="52" text-anchor="middle">Connect</text>
+<rect class="b" x="244" y="30" width="86" height="34" rx="6"/><text x="287" y="52" text-anchor="middle">Active</text>
+<rect class="b" x="364" y="30" width="86" height="34" rx="6"/><text x="407" y="52" text-anchor="middle">OpenSent</text>
+<rect class="b" x="484" y="30" width="96" height="34" rx="6"/><text x="532" y="52" text-anchor="middle">OpenConfirm</text>
+<rect class="h" x="604" y="30" width="92" height="34" rx="6"/><text class="w" x="650" y="52" text-anchor="middle">Established</text>
+<g marker-end="url(#ar)"><line x1="90" y1="47" x2="122" y2="47"/><line x1="210" y1="47" x2="242" y2="47"/><line x1="330" y1="47" x2="362" y2="47"/><line x1="450" y1="47" x2="482" y2="47"/><line x1="580" y1="47" x2="602" y2="47"/></g>
+<text class="m" x="167" y="86" text-anchor="middle">TCP handshake</text><text class="m" x="167" y="100" text-anchor="middle">OK: send OPEN</text>
+<text class="m" x="287" y="86" text-anchor="middle">waits for peer TCP</text><text class="m" x="287" y="100" text-anchor="middle">(problem state)</text>
+<text class="m" x="407" y="86" text-anchor="middle">OPEN sent, wait peer</text>
+<text class="m" x="532" y="86" text-anchor="middle">KEEPALIVE sent</text>
+<text class="m" x="650" y="86" text-anchor="middle">UPDATEs flow</text></svg></div>
+<div class="trap"><b>Trap.</b> Stuck in <b>Active</b> means: no IP connectivity, wrong neighbor IP or AS number, or an ACL/firewall blocking TCP 179. A NOTIFICATION sends any state back to <b>Idle</b>.</div>
+
+<h2>Messages and timers</h2>
+<div class="tbl"><table><tr><th>Message</th><th>Job</th></tr>
+<tr><td>OPEN</td><td>Starts session: version 4, local AS, hold time, BGP ID, options</td></tr>
+<tr><td>KEEPALIVE</td><td>Every <b>60 s</b>. Hold time <b>180 s</b> (3 missed = peer dead)</td></tr>
+<tr><td>UPDATE</td><td>Advertises prefixes (reachability)</td></tr>
+<tr><td>NOTIFICATION</td><td>Fatal error. <b>Resets/terminates</b> the session</td></tr></table></div>
+<p>Runs over <b>TCP 179</b>. If hold timers differ between peers, the session still forms and the <b>smaller</b> value is used.</p>
+
+<h2>Commands</h2>
+<pre>router bgp 100
+ neighbor 192.X.0.6 remote-as 200   ! peer's interface IP + peer's AS
+ timers bgp 30 90                   ! keepalive hold
+router ospf 1
+ redistribute bgp 100 subnets       ! "subnets" is required
+router bgp 100
+ redistribute ospf 1
+router eigrp 50
+ redistribute bgp 200 metric 1544 2000 255 1 1500
+ no auto-summary
+router bgp 200
+ redistribute eigrp 50</pre>
+<p>Show commands: <code>show ip route</code>, <code>show ip bgp summary</code>, <code>show ip bgp neighbors</code>. Do <b>not</b> put the inter-AS link in OSPF/EIGRP on the border routers.</p>
+
+<h2>Worked: reading two configs (Quiz 2, Q2)</h2>
+<div class="fig"><svg viewBox="0 0 700 150" role="img" aria-label="Two BGP routers">
+<rect class="b" x="10" y="10" width="270" height="130" rx="10" stroke-dasharray="5 4"/><text x="22" y="30">AS 40</text>
+<rect class="b" x="420" y="10" width="270" height="130" rx="10" stroke-dasharray="5 4"/><text x="432" y="30">AS 30</text>
+<circle class="b" cx="200" cy="80" r="30"/><text x="200" y="85" text-anchor="middle">R1</text>
+<circle class="b" cx="500" cy="80" r="30"/><text x="500" y="85" text-anchor="middle">R2</text>
+<line x1="230" y1="80" x2="470" y2="80"/>
+<text class="m" x="236" y="72">S0/0 20.0.0.1</text><text class="m" x="400" y="72" text-anchor="end">20.0.0.2 S0/0</text>
+<text x="350" y="100" text-anchor="middle">20.0.0.0 /30</text>
+<text class="m" x="22" y="110">Fa0/0 10.0.0.1</text><text class="m" x="22" y="125">net 10.0.0.0 /27 (.224)</text>
+<text class="m" x="530" y="110">Fa0/0 50.0.0.1</text><text class="m" x="530" y="125">net 50.0.0.0 /28 (.240)</text></svg></div>
+<p>Method: the line <code>router bgp X</code> is <i>that router's</i> AS. The <code>neighbor</code> line gives the other router's IP and AS. Masks come from the <code>interface</code> lines.</p>
+</section>
+
+<section id="t6" style="--a:var(--c6)">
+<h2>DHCP: DORA</h2>
+<div class="fig"><svg viewBox="0 0 700 250" role="img" aria-label="DHCP DORA sequence">
+<text x="110" y="20" text-anchor="middle">Client</text><text x="590" y="20" text-anchor="middle">DHCP server</text>
+<line x1="110" y1="30" x2="110" y2="240"/><line x1="590" y1="30" x2="590" y2="240"/>
+<defs><marker id="a2" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" style="fill:var(--c6)"/></marker></defs>
+<g style="stroke:var(--c6);stroke-width:2" marker-end="url(#a2)"><line x1="114" y1="60" x2="584" y2="75" /><line x1="586" y1="110" x2="116" y2="125"/><line x1="114" y1="160" x2="584" y2="175"/><line x1="586" y1="210" x2="116" y2="225"/></g>
+<text x="350" y="52" text-anchor="middle">1 Discover (broadcast): find servers. src 0.0.0.0, dst 255.255.255.255</text>
+<text x="350" y="102" text-anchor="middle">2 Offer: proposed IP, mask, lease</text>
+<text x="350" y="152" text-anchor="middle">3 Request (broadcast): accept one offer</text>
+<text x="350" y="202" text-anchor="middle">4 ACK: assignment confirmed</text></svg></div>
+<p>UDP: server <b>67</b>, client <b>68</b>. Also hands out default gateway and DNS server.</p>
+<div class="trap"><b>Trap (Quiz 2).</b> Discover is <i>not</i> "request an IP". It <b>locates available DHCP servers</b>. The Request message is the one that asks for the offered address.</div>
+<pre>! Router as DHCP server
+ip dhcp excluded-address 192.X.1.1 192.X.1.10
+ip dhcp pool LAN1
+ network 192.X.1.0 255.255.255.0
+ default-router 192.X.1.1
+ dns-server 192.X.2.2
+service dhcp
+
+! Relay: server on another subnet (on the CLIENT-side interface)
+interface fa0/0
+ ip helper-address 192.X.1.2</pre>
+<div class="trap"><b>Trap.</b> The answer is <code>ip helper-address</code>. "ip forward-address" and "ip dhcp relay" do not exist. Excluded addresses protect gateways and servers.</div>
+
+<h2>DNS</h2>
+<div class="fig"><svg viewBox="0 0 700 150" role="img" aria-label="DNS hierarchy">
+<rect class="h" x="270" y="8" width="160" height="30" rx="6"/><text class="w" x="350" y="28" text-anchor="middle">Root servers</text>
+<rect class="h" x="270" y="60" width="160" height="30" rx="6"/><text class="w" x="350" y="80" text-anchor="middle">TLD (.com .edu)</text>
+<rect class="h" x="270" y="112" width="160" height="30" rx="6"/><text class="w" x="350" y="132" text-anchor="middle">Authoritative</text>
+<g><line x1="350" y1="38" x2="350" y2="60"/><line x1="350" y1="90" x2="350" y2="112"/></g>
+<text class="m" x="440" y="52">returns TLD server IPs</text><text class="m" x="440" y="104">returns authoritative server IPs</text><text class="m" x="440" y="136">stores and serves the actual records</text></svg></div>
+<ul><li>UDP <b>53</b> by default, TCP 53 when the answer is too big.</li>
+<li><b>Recursive</b>: server does all the work. <b>Iterative</b>: server returns a referral. Local resolver is recursive toward the host, iterative toward the hierarchy.</li>
+<li>Records: <b>A</b> (name to IP), <b>CNAME</b> (alias), <b>MX</b> (mail server).</li>
+<li><code>ping pc3</code> sends a DNS query/reply first, then ICMP.</li></ul>
+
+<h2>Web and email</h2>
+<div class="tbl"><table><tr><th>Protocol</th><th>Job</th><th>Port</th><th>Secure</th></tr>
+<tr><td>HTTP / HTTPS</td><td>web pages</td><td>TCP 80</td><td>443</td></tr>
+<tr><td>SMTP</td><td>sending mail</td><td>25</td><td>465 / 587</td></tr>
+<tr><td>POP3</td><td>retrieve: <b>downloads and removes</b> from server</td><td>110</td><td>995</td></tr>
+<tr><td>IMAP</td><td>retrieve: <b>keeps mail on server</b>, multi-device sync</td><td>143</td><td>993</td></tr>
+<tr><td>FTP</td><td>file transfer</td><td>21</td><td></td></tr></table></div>
+<div class="card"><b>Web request order:</b> DNS lookup, then TCP three-way handshake (SYN, SYN-ACK, ACK), then HTTP GET, then response. <b>Email order:</b> DNS, TCP, SMTP to the server, later POP3 by the recipient. Address format <code>user@domain</code>; the mail client's incoming and outgoing server is the domain name.</div>
+</section>
+
+<section id="t7" style="--a:var(--c7)">
+<h2>Switch logic and the 802.1Q tag</h2>
+<div class="card"><b>Learn</b> source MAC, <b>look up</b> destination, then: known on another port, <b>forward</b>; known on the same port, <b>drop</b>; unknown, <b>flood</b> every port except the incoming one.</div>
+<div class="fig"><svg viewBox="0 0 700 110" role="img" aria-label="802.1Q frame">
+<rect class="b" x="10" y="30" width="130" height="36"/><text x="75" y="53" text-anchor="middle">Dest MAC</text>
+<rect class="b" x="140" y="30" width="130" height="36"/><text x="205" y="53" text-anchor="middle">Source MAC</text>
+<rect class="h" x="270" y="30" width="90" height="36"/><text class="w" x="315" y="53" text-anchor="middle">TPID 2B</text>
+<rect class="h" x="360" y="30" width="150" height="36" style="opacity:.8"/><text class="w" x="435" y="53" text-anchor="middle">TCI 2B</text>
+<rect class="b" x="510" y="30" width="80" height="36"/><text x="550" y="53" text-anchor="middle">EtherType</text>
+<rect class="b" x="590" y="30" width="100" height="36"/><text x="640" y="53" text-anchor="middle">Payload</text>
+<text class="m" x="315" y="22" text-anchor="middle">0x8100</text>
+<text class="m" x="435" y="22" text-anchor="middle">PCP 3b (QoS) + DEI 1b + VID 12b</text>
+<text class="m" x="360" y="92" text-anchor="middle">4-byte tag sits between source MAC and EtherType</text></svg></div>
+<ul><li>VIDs: 0 and 4095 reserved, 1 default, <b>2 to 4094 usable</b>.</li>
+<li>The only thing you <b>must</b> specify to create a VLAN is the <b>VLAN ID</b>.</li>
+<li><b>Every switch must have every VLAN created</b>, or it drops that VLAN's frames. Assigning a port to a missing VLAN auto-creates it.</li>
+<li>Different VLANs are different subnets, so they need a Layer 3 device.</li></ul>
+<div class="tbl"><table><tr><th></th><th>Access</th><th>Trunk</th></tr><tr><td>Carries</td><td>one VLAN, untagged</td><td>many VLANs, tagged</td></tr><tr><td>Connects</td><td>switch to PC</td><td>switch to switch, switch to router, L2 to L3 switch</td></tr></table></div>
+
+<h2>Method 1: Router-on-a-Stick</h2>
+<div class="fig"><svg viewBox="0 0 700 170" role="img" aria-label="Router on a stick">
+<circle class="b" cx="90" cy="85" r="34"/><text x="90" y="90" text-anchor="middle">Router</text>
+<rect class="b" x="300" y="60" width="100" height="50" rx="6"/><text x="350" y="90" text-anchor="middle">Switch</text>
+<line x1="124" y1="85" x2="300" y2="85" style="stroke-width:4"/><text x="212" y="76" text-anchor="middle">TRUNK</text>
+<text class="m" x="20" y="140">Fa0/0 (no IP)</text><text class="m" x="20" y="155">Fa0/0.10 = VLAN 10 gateway</text><text class="m" x="20" y="170">Fa0/0.20 = VLAN 20 gateway</text>
+<line x1="400" y1="75" x2="520" y2="35"/><line x1="400" y1="95" x2="520" y2="135"/>
+<rect class="h" x="520" y="20" width="150" height="30" rx="6"/><text class="w" x="595" y="40" text-anchor="middle">PC in VLAN 10 (access)</text>
+<rect class="h" x="520" y="120" width="150" height="30" rx="6" style="opacity:.75"/><text class="w" x="595" y="140" text-anchor="middle">PC in VLAN 20 (access)</text></svg></div>
+<pre>interface Fa0/0
+ no shutdown
+interface Fa0/0.40                  ! number usually = VLAN ID
+ encapsulation dot1Q 40             ! BEFORE the ip address
+ ip address 192.73.40.1 255.255.255.0</pre>
+<div class="trap"><b>Trap (Quiz 3).</b> Wrong options use: the serial interface, <code>encapsulation</code> under the physical interface, no encapsulation line, or a <b>wildcard</b> mask (0.0.0.255) on an IP address.</div>
+
+<h2>Method 2: Layer 3 switch (SVI)</h2>
+<pre>ip routing                            ! OFF by default
+vlan 60
+interface vlan 60                     ! SVI = gateway for VLAN 60
+ ip address 192.X.60.1 255.255.255.0
+interface Fa0/1
+ no switchport                        ! routed port
+ ip address 192.X.0.5 255.255.255.252
+interface Fa0/2                       ! trunk to a Layer 2 switch
+ switchport trunk encapsulation dot1q ! L3 side only
+ switchport mode trunk</pre>
+<p>Pros: fast, routes inter-VLAN internally. Cons: expensive, <b>no WAN interfaces</b>, less flexible than a router.</p>
+<pre>! Layer 2 switch
+vlan 10
+interface Fa2/1
+ switchport access vlan 10
+interface Fa1/1
+ switchport mode trunk
+interface range Fa0/1 - 5
+ switchport access vlan 20</pre>
+
+<h2>Tracing paths: ask these in order</h2>
+<div class="card"><ol style="margin:0;padding-left:20px"><li>Same VLAN? Pure Layer 2, <b>no router</b>. Quiz 3: PC1 and PC6 are both VLAN 20, so the path is PC1, S0, S1, S2, PC6.</li>
+<li>Different VLANs, same router? Up to the router and back down the same trunk. PC0 to PC6: PC0, SW0, R0, SW0, SW1, SW2, PC6.</li>
+<li>Different routers? Cross the router link. PC0 to PC5: PC0, SW0, R0, R1, SW2, PC5.</li></ol></div>
+
+<h2>ACLs (Quiz 3)</h2>
+<div class="tbl"><table><tr><th>Standard</th><th>Extended</th></tr><tr><td>Number 1 to 99, matches <b>source only</b></td><td>Number 100 to 199, protocol + source + destination + port</td></tr></table></div>
+<ul><li><b>Implicit deny all</b> at the end. First match wins. <code>0.0.0.255</code> wildcard = first three octets must match.</li>
+<li>Ping works but HTTP fails: an extended ACL is blocking <b>port 80</b>.</li>
+<li>Extended example: <code>access-list 101 deny tcp any host 192.168.1.1 eq ftp</code></li></ul>
+<pre>! Block PC0 (192.73.10.2) from VLAN 50
+access-list 10 deny host 192.73.10.2
+access-list 10 permit any
+interface fa0/0.50
+ ip access-group 10 out</pre>
+<div class="trap"><b>Trap (Quiz 3 Q6).</b> Lines that match source 172.16.x.x do not match traffic coming from the Internet, so it falls to the implicit deny and is dropped.</div>
+</section>
+
+<section id="tc" style="--a:var(--c5)">
+<h2>Write it from memory, then reveal</h2>
+<p>Cover the answer, write the commands on paper, then check. Quiz 2 and 3 both had "write the config" questions worth 2 points.</p>
+<details><summary>1. R2 (AS 65002) must peer with R1 (209.165.200.225, AS 65001)</summary><pre>R2(config)# router bgp 65002
+R2(config-router)# neighbor 209.165.200.225 remote-as 65001</pre></details>
+<details><summary>2. Enable OSPF on Router0 with networks 192.168.10.0/24 and 192.168.20.0/24</summary><pre>router ospf 1
+ network 192.168.10.0 0.0.0.255 area 0
+ network 192.168.20.0 0.0.0.255 area 0</pre>Router ID with no loopback = highest active interface IP (192.168.20.2 in Quiz 2).</details>
+<details><summary>3. Set BGP keepalive 30 and hold 90</summary><pre>router bgp 100
+ timers bgp 30 90</pre></details>
+<details><summary>4. Redistribute BGP 100 into OSPF 1, and OSPF 1 into BGP 100</summary><pre>router ospf 1
+ redistribute bgp 100 subnets
+router bgp 100
+ redistribute ospf 1</pre></details>
+<details><summary>5. DHCP pool for 192.X.2.0/24, reserve .1 to .10, gateway .1, DNS 192.X.2.2</summary><pre>ip dhcp excluded-address 192.X.2.1 192.X.2.10
+ip dhcp pool LAN2
+ network 192.X.2.0 255.255.255.0
+ default-router 192.X.2.1
+ dns-server 192.X.2.2
+service dhcp</pre></details>
+<details><summary>6. Forward DHCP broadcasts from Fa0/0 to server 192.X.1.2</summary><pre>interface fa0/0
+ ip helper-address 192.X.1.2</pre></details>
+<details><summary>7. Sub-interface on R1 Fa0/0 for VLAN 40, 192.73.40.0/24</summary><pre>interface Fa0/0.40
+ encapsulation dot1Q 40
+ ip address 192.73.40.1 255.255.255.0</pre></details>
+<details><summary>8. Layer 3 switch: gateway for VLAN 70 and enable routing</summary><pre>ip routing
+interface vlan 70
+ ip address 192.X.70.1 255.255.255.0</pre></details>
+<details><summary>9. Standard ACL: deny host 192.73.10.2 going out Fa0/0.50, allow the rest</summary><pre>access-list 10 deny host 192.73.10.2
+access-list 10 permit any
+interface fa0/0.50
+ ip access-group 10 out</pre></details>
+<details><summary>10. Quick facts: summarize 172.16.192.16/29 + 172.16.192.24/29, and cost 2</summary>Summary: <b>172.16.192.16/28</b>. OSPF cost = 100 Mbps / bandwidth, so cost 2 needs <b>50 Mbps</b>.</details>
+</section>
+
+<section id="tq">
+<div class="score"><span id="sc">Score: 0 / 0</span><button id="rs">Restart</button></div>
+<div id="qs"></div>
+</section>
+</main>
+<script>
+const Q=[
+["What is the purpose of a DHCP Discover message?",["Request an IP address","Acknowledge an assignment","Offer an IP to a client","Locate available DHCP servers"],3,"Discover is a broadcast to find servers. The Request message accepts an offer."],
+["Which BGP message causes the peering session to be reset?",["OPEN","KEEPALIVE","NOTIFICATION","UPDATE"],2,"NOTIFICATION reports a fatal error and ends the session."],
+["Which BGP state is the one where the router has sent a KEEPALIVE?",["Idle","Active","OpenSent","OpenConfirm"],3,"OpenConfirm: KEEPALIVE sent, waiting for the peer's."],
+["Default administrative distance of eBGP vs iBGP?",["20 and 200","200 and 20","90 and 110","110 and 170"],0,"eBGP 20, iBGP 200."],
+["BGP sessions use which transport and port?",["UDP 179","TCP 179","TCP 80","UDP 53"],1,"TCP 179."],
+["A BGP session stays in Active. Most likely cause?",["Wrong neighbor IP or remote-as, or TCP 179 blocked","Too many routes","Keepalive set to 60","Hold time of 180"],0,"Active means the TCP/OPEN exchange is not completing."],
+["Which keyword is required when redistributing BGP into OSPF?",["metric","subnets","area 0","auto-summary"],1,"Without subnets, only classful networks are redistributed."],
+["Two BGP peers have hold timers 90 and 180. What happens?",["Session fails","Session forms, 90 is used","Session forms, 180 is used","Session forms, average is used"],1,"The smaller hold time wins."],
+["Which command relays DHCP broadcasts to a server on another subnet?",["ip forward-address","ip helper-address","ip dhcp relay","ip address dhcp"],1,"Configured on the client-side interface."],
+["What does POP3 do with email?",["Encrypts it","Sends it to other servers","Downloads it to the device and removes it from the server","Keeps it on the server for multiple devices"],2,"Keeping mail on the server is IMAP."],
+["Main function of an authoritative DNS server?",["Cache queries","Send email","Store and serve DNS records for domain names","Assign IPs"],2,"Root points to TLD, TLD points to authoritative."],
+["Which protocol and port do web servers use for HTTPS?",["TCP 80","TCP 443","UDP 443","TCP 25"],1,"HTTP is 80, HTTPS is 443."],
+["The second two bytes (TCI) of the 802.1Q tag are used for:",["Marking the frame as 802.1Q (0x8100)","QoS priority and the VLAN the frame belongs to","The upper-layer protocol","Building the MAC table"],1,"0x8100 is the TPID. The TCI holds PCP, DEI and the 12-bit VID."],
+["What must be specified when creating a VLAN?",["IP address","Port mode","VLAN identifier (1 to 4094)","Port MAC"],2,"Only the ID is mandatory."],
+["What must be enabled on a Layer 3 switch before it routes between VLANs?",["no switchport on all ports","ip routing","switchport mode trunk","service dhcp"],1,"Routing is off by default."],
+["PC1 and PC6 are both in VLAN 20. Path from PC1 to PC6?",["PC1, S0, R0, S0, S1, S2, PC6","PC1, S0, R0, R1, S2, PC6","PC1, S0, S1, S2, PC6","PC1, S0, S1, S2, R1, S2, PC6"],2,"Same VLAN means Layer 2 only."],
+["A host can ping a web server but cannot browse it. Likely cause?",["Extended ACL blocking port 80","Standard ACL blocking all ports","Extended ACL blocking port 23","Trunk misconfigured"],0,"ICMP passes, HTTP (80) is blocked."],
+["Correct sub-interface config for VLAN 40 on R1?",["interface Fa0/0.40 / encapsulation dot1Q 40 / ip address 192.73.40.1 255.255.255.0","interface Se0/0.40 / encapsulation dot1Q 40 / ip address ...","interface Fa0/0.40 / ip address only","interface Fa0/0.40 / encapsulation dot1Q 40 / ip address ... 0.0.0.255"],0,"Right interface, encapsulation, normal subnet mask."],
+["What does this do: access-list 146 deny ip 192.18.71.0 0.0.0.255 any",["Blocks packets whose first three source octets match, to any destination","Allows that source","Blocks by destination","Blocks only the last octet"],0,"0.0.0.255 means the first three octets must match."],
+["Router ID of OSPF Router0 with interfaces 192.168.10.1 and 192.168.20.2, no loopback?",["192.168.10.1","192.168.20.2","172.32.0.1","None"],1,"Highest active interface IP (a loopback would win over both)."],
+["172.16.192.16/29 and 172.16.192.24/29 summarize to:",["172.16.192.16/27","172.16.192.16/28","172.16.192.0/28","172.16.192.24/28"],1,"Two adjacent /29 blocks make one /28."]
+];
+let sc=0,dn=0;
+function build(){sc=0;dn=0;upd();const c=document.getElementById("qs");c.innerHTML="";
+Q.forEach((q,i)=>{const d=document.createElement("div");d.className="q";const p=document.createElement("p");p.textContent=(i+1)+". "+q[0];d.appendChild(p);
+const ex=document.createElement("div");ex.className="ex";ex.textContent=q[3];let done=false;
+q[1].forEach((o,j)=>{const b=document.createElement("button");b.className="opt";b.textContent=o;
+b.onclick=()=>{if(done)return;done=true;dn++;if(j===q[2]){sc++;b.classList.add("ok")}else{b.classList.add("no");d.querySelectorAll(".opt")[q[2]].classList.add("ok")}ex.style.display="block";upd()};d.appendChild(b)});
+d.appendChild(ex);c.appendChild(d)})}
+function upd(){document.getElementById("sc").textContent="Score: "+sc+" / "+dn+" of "+Q.length}
+document.getElementById("rs").onclick=build;build();
+const tabs=document.querySelectorAll("nav button");
+tabs.forEach(t=>t.onclick=()=>{tabs.forEach(x=>x.setAttribute("aria-selected",x===t));document.querySelectorAll("section").forEach(s=>s.classList.toggle("on",s.id===t.dataset.t));window.scrollTo(0,0)});
+</script></body></html>
